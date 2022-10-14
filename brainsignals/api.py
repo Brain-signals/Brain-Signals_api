@@ -63,7 +63,7 @@ async def upload_nii(model_id,nii_file: UploadFile=File(...)):
 
         my_modele = Model().load_model(model_id)
         y_pred = my_modele.predict(vol)
-        print(y_pred)
+        keys = [k for k, v in y_pred.items() if v > 0.5]
 
     except AttributeError:
         return {'message':f'Model {model_id} not found.',
@@ -76,4 +76,4 @@ async def upload_nii(model_id,nii_file: UploadFile=File(...)):
         await nii_file.close()
         os.remove(path)
 
-    return y_pred
+    return keys
