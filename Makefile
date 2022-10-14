@@ -3,16 +3,10 @@ default:
 	@echo "Please specify a make command. help command might be usefull"
 
 reinstall_package:
-	@pip uninstall -y brain-signals && pip install -e .
+	@pip uninstall -y brain-signals_api && pip install -e .
 
 hard_uninstall:
-	@pip uninstall -yr requirements.txt brain-signals
-
-train_model:
-	@python -m brainsignals.main
-
-dl_datasets:
-	@gsutil -m cp -ncr gs://vape-mri/processed_datasets ${DATASETS_PATH}/..
+	@pip uninstall -yr requirements.txt brain-signals_api
 
 update_registry:
 	@gsutil -m cp -nc ${LOCAL_REGISTRY_PATH}/* gs://vape-mri/registry || :
@@ -20,6 +14,7 @@ update_registry:
 
 run_api:
 	@uvicorn brainsignals.api:app --reload
+
 
 help:
 	@echo "\nHelp for the VAPE-MRI project package Makefile"
