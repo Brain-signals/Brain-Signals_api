@@ -1,0 +1,21 @@
+tensorflow-macos==2.7.0; sys_platform == 'darwin' and 'ARM' in platform_version
+tensorflow==2.7.0; sys_platform == 'darwin' and 'ARM' not in platform_version
+tensorflow==2.7.0; sys_platform != 'darwin'
+# python == 3.8.13
+numpy
+pandas
+matplotlib
+scikit-learn
+google-cloud-storage
+nibabel
+opencv-python
+imageio
+plotly
+#mlflow
+python-multipart
+
+fastapi         # API framework
+# streamlit
+uvicorn         # Web server
+
+# httpx           # HTTP client
