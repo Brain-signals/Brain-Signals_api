@@ -15,6 +15,9 @@ update_registry:
 run_api:
 	@uvicorn brainsignals.api:app --reload
 
+dockerize:
+	@docker build --tag=${IMAGE}:dev .
+
 
 help:
 	@echo "\nHelp for the VAPE-MRI project package Makefile"

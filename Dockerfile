@@ -1,4 +1,4 @@
-FROM python:3.8.12-buster
+FROM python:3.10.8-buster
 COPY brainsignals brainsignals
 COPY .registry .registry
 COPY requirements.txt requirements.txt
