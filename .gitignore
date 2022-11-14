@@ -1,0 +1,13 @@
+# System files and folder
+.DS_Store
+.python-version
+__pycache__/
+
+# Personnal things
+.env
+
+# Too heavy for git
+.registry/
+
+# Executables
+*.egg-info
