@@ -3,7 +3,8 @@ COPY brainsignals brainsignals
 COPY .registry .registry
 COPY requirements.txt requirements.txt
 COPY setup.py setup.py
+RUN apt-get update && apt-get install libgl1 -y
 RUN pip install .
-COPY .env .env
-RUN python -c 'from dotenv import load_dotenv, find_dotenv; load_dotenv(find_dotenv())'
-CMD uvicorn brainsignals.api:app --reload
+ENV LOCAL_REGISTRY_PATH=./registry
+RUN mkdir -p brainsignals/tmp_files
+CMD uvicorn brainsignals.api:app --host 0.0.0.0 --port 8080

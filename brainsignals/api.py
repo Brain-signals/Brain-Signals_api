@@ -23,7 +23,7 @@ def root():
 @app.get("/list/")
 def list():
     model_list = []
-    for m in glob.glob(f'{os.environ.get("LOCAL_REGISTRY_PATH")}/*'):
+    for m in sorted(glob.glob(f'{os.environ.get("LOCAL_REGISTRY_PATH")}/*')):
         model_list.append(m[-20:])
     return {'models_found':model_list}
 
