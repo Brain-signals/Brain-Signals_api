@@ -16,7 +16,7 @@ Here are the different endpoints :
 `-/predict` - Select a model and make a prediction using a nifti file
 
 - **model_id** _to specify a model id (ex : 20220902_142838_ONBJ)_
-- you also need to provide a nifti file (only avalaible via FastApi UI at `/docs` endpoint)
+- you also need to provide a nifti file (unavalaible via HTTP, use FastApi UI at `/docs` endpoint)
 
 
 ***
