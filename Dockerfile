@@ -6,5 +6,4 @@ COPY setup.py setup.py
 RUN apt-get update && apt-get install libgl1 -y
 RUN pip install .
 ENV LOCAL_REGISTRY_PATH=/.registry
-RUN mkdir -p brainsignals/tmp_files
 CMD uvicorn brainsignals.api:app --host 0.0.0.0 --port 8080

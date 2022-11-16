@@ -2,7 +2,7 @@
 
 import glob
 import os
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Request, status
 
 
 ### Internal imports ###
@@ -33,8 +33,15 @@ app = FastAPI(title="Brain-Signals API",
               version="1.0.3")
 
 @app.get("/")
-def root():
-    return {'API_status':'Running'}
+def root(request : Request):
+    endpoints = {'To list all avalaible models':f'{request.url}list',
+                 'To view on model specs':f'{request.url}model',
+                 'To make a prediction':f'{request.url}predict',
+                 'To access FastApi UI':f'{request.url}docs'}
+
+    return {'API_status':'Running',
+            'API documentation at':'https://github.com/Brain-signals/Brain-Signals_api',
+            'avalaible endpoints':endpoints}
 
 
 @app.get("/list/")
@@ -46,7 +53,7 @@ def list():
 
 
 @app.get("/model")
-def model(model_id):
+def model(model_id, request : Request):
     try:
         my_modele = Model().load_model(model_id)
         return {'Model_id': my_modele.model_id,
@@ -65,11 +72,14 @@ def model(model_id):
                 'Creator_comment':my_modele.creator_comment
                 }
     except AttributeError:
-        return {'message':f'Model {model_id} not found, check available models : http://127.0.0.1:8000/list'}
+        return {'error':f'Model {model_id} not found, check available models : {request.url}list'}
 
 
 @app.post("/predict/")
-async def upload_nii(model_id,nii_file: UploadFile=File(...)):
+async def upload_nii(model_id,request : Request, nii_file: UploadFile=File(...)):
+    if not os.path.exists(os.path.join('brainsignals', 'tmp_files')):
+        os.mkdir(os.path.join('brainsignals', 'tmp_files'))
+
     try:
         path = os.path.join('brainsignals', 'tmp_files', nii_file.filename)
         with open(path, 'wb') as f:
@@ -94,11 +104,3 @@ async def upload_nii(model_id,nii_file: UploadFile=File(...)):
         os.remove(path)
 
     return keys
-
-
-@app.get("/debug")
-def report():
-    print(os.environ.get("LOCAL_REGISTRY_PATH"))
-    print(sorted(glob.glob(f'{os.environ.get("LOCAL_REGISTRY_PATH")}/*')))
-    print(os.listdir("/"))
-    print(os.listdir(os.environ.get("LOCAL_REGISTRY_PATH")))
