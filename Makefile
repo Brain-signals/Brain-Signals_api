@@ -19,8 +19,8 @@ deploy_api:
 	@docker build --platform linux/amd64 --tag=${GCR_MULTI_REGION}/${PROJECT}/${IMAGE}:prod . && :
 	@docker push ${GCR_MULTI_REGION}/${PROJECT}/${IMAGE}:prod && :
 	@gcloud run deploy --image ${GCR_MULTI_REGION}/${PROJECT}/${IMAGE}:prod \
-		--port=8080 --cpu=2 --min-instances=1 --memory=4Gi --region=europe-west1 \
-		--allow-unauthenticated --set-env-vars LOCAL_REGISTRY_PATH=./registry
+		--port=8080 --cpu=2 --min-instances=1 --memory=8Gi --region=europe-west1 \
+		--allow-unauthenticated
 
 help:
 	@echo "\nHelp for the VAPE-MRI project package Makefile"

@@ -13,7 +13,24 @@ from brainsignals.model_class import Model
 
 ### Functions ###
 
-app = FastAPI()
+description = """
+Brain-Signals API
+
+## Endpoints :
+
+* **/** (_see API status_).
+* **/list** (_see all avalaible models_).
+* **/model** (_see settings of a selected model_).
+* **/predict** (_select a model and make a prediction using a nifti file_).
+
+## GitHub:
+
+Complete documentation on [project's GitHub page](https://github.com/Brain-signals/Brain-Signals_api)
+"""
+
+app = FastAPI(title="Brain-Signals API",
+              description=description,
+              version="1.0.3")
 
 @app.get("/")
 def root():
@@ -77,3 +94,11 @@ async def upload_nii(model_id,nii_file: UploadFile=File(...)):
         os.remove(path)
 
     return keys
+
+
+@app.get("/debug")
+def report():
+    print(os.environ.get("LOCAL_REGISTRY_PATH"))
+    print(sorted(glob.glob(f'{os.environ.get("LOCAL_REGISTRY_PATH")}/*')))
+    print(os.listdir("/"))
+    print(os.listdir(os.environ.get("LOCAL_REGISTRY_PATH")))
