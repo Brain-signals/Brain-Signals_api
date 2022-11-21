@@ -2,7 +2,7 @@
 
 import glob
 import os
-from fastapi import FastAPI, UploadFile, File, Request, status
+from fastapi import FastAPI, UploadFile, File, Request
 
 
 ### Internal imports ###
@@ -30,26 +30,19 @@ Complete documentation on [project's GitHub page](https://github.com/Brain-signa
 
 app = FastAPI(title="Brain-Signals API",
               description=description,
-              version="1.0.3")
+              version="1.0.4")
+
 
 @app.get("/")
 def root(request : Request):
-    endpoints = {'To list all avalaible models':f'{request.url}list',
-                 'To view on model specs':f'{request.url}model',
+    endpoints = {'To view on model specs':f'{request.url}model/model_id=',
+                 'To list all avalaible models':f'{request.url}list',
                  'To make a prediction':f'{request.url}predict',
                  'To access FastApi UI':f'{request.url}docs'}
 
     return {'API_status':'Running',
             'API documentation at':'https://github.com/Brain-signals/Brain-Signals_api',
-            'avalaible endpoints':endpoints}
-
-
-@app.get("/list/")
-def list():
-    model_list = []
-    for m in sorted(glob.glob(f'{os.environ.get("LOCAL_REGISTRY_PATH")}/*')):
-        model_list.append(m[-20:])
-    return {'models_found':model_list}
+            'avalaible endpoints': endpoints}
 
 
 @app.get("/model")
@@ -72,11 +65,20 @@ def model(model_id, request : Request):
                 'Creator_comment':my_modele.creator_comment
                 }
     except AttributeError:
-        return {'error':f'Model {model_id} not found, check available models : {request.url}list'}
+        return {'error':f'Model {model_id} not found, check available models :' +
+                f' {str(request.url)[0:-6]}list'}
 
 
-@app.post("/predict/")
-async def upload_nii(model_id,request : Request, nii_file: UploadFile=File(...)):
+@app.get("/list")
+def list(request : Request):
+    model_list = {}
+    for m in sorted(glob.glob(f'{os.environ.get("LOCAL_REGISTRY_PATH")}/*')):
+        model_list[m[-20:]] = f'{str(request.url)[0:-5]}/model?model_id={m[-20:]}'
+    return {'models_found':model_list}
+
+
+@app.post("/predict")
+async def upload_nii(model_id, request : Request, nii_file: UploadFile=File(...)):
     if not os.path.exists(os.path.join('brainsignals', 'tmp_files')):
         os.mkdir(os.path.join('brainsignals', 'tmp_files'))
 
@@ -94,7 +96,7 @@ async def upload_nii(model_id,request : Request, nii_file: UploadFile=File(...))
 
     except AttributeError:
         return {'message':f'Model {model_id} not found.',
-                'advice':'Use /list endpoint to list all avalaible models.'}
+                'advice':f'Use {str(request.url)[0:-8]}/list to list all avalaible models.'}
 
     except Exception:
         return {'message':'There was an error uploading the file'}
