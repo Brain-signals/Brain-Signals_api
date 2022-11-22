@@ -33,6 +33,7 @@ Please follow this guidelines to setup everything you need after you cloned the 
 
 ```
 pyenv virtualenv brain-signals-api && pyenv local brain-signals-api
+make reinstall_package
 ```
 ### Registry folder
 
