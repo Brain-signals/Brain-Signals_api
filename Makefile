@@ -21,15 +21,3 @@ deploy_api:
 	@gcloud run deploy --image ${GCR_MULTI_REGION}/${PROJECT}/${IMAGE}:prod \
 		--port=8080 --cpu=2 --min-instances=1 --memory=8Gi --region=europe-west1 \
 		--allow-unauthenticated
-
-help:
-	@echo "\nHelp for the VAPE-MRI project package Makefile"
-
-	@echo "\n  help"
-	@echo "    Show this help"
-
-	@echo "\n  reinstall_package"
-	@echo "    Uninstall and reinstall VAPE-MRI virtual env, and its requirements"
-	@echo "    to completely uninstall VAPE-MRI, and its requirements, use hard_uninstall"
-
-	@echo ""

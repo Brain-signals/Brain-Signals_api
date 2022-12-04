@@ -35,10 +35,12 @@ app = FastAPI(title="Brain-Signals API",
 
 @app.get("/")
 def root(request : Request):
-    endpoints = {'To view on model specs':f'{request.url}model/model_id=',
+    endpoints = {'To view on model specs':f'{request.url}model?model_id=',
                  'To list all avalaible models':f'{request.url}list',
                  'To make a prediction':f'{request.url}predict',
                  'To access FastApi UI':f'{request.url}docs'}
+
+    print('test')
 
     return {'API_status':'Running',
             'API documentation at':'https://github.com/Brain-signals/Brain-Signals_api',
@@ -95,8 +97,8 @@ async def upload_nii(model_id, request : Request, nii_file: UploadFile=File(...)
         keys = [k for k, v in y_pred.items() if v > 0.5]
 
     except AttributeError:
-        return {'message':f'Model {model_id} not found.',
-                'advice':f'Use {str(request.url)[0:-8]}/list to list all avalaible models.'}
+        return {'error':f'Model {model_id} not found, check available models :' +
+                f' {str(request.url)[0:-6]}list'}
 
     except Exception:
         return {'message':'There was an error uploading the file'}
